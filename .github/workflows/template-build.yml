@@ -1,0 +1,156 @@
+name: Template - Build Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifact:
+        type: boolean
+        required: true
+      app-solution:
+        type: string
+        required: true
+      app-publish-project:
+        type: string
+        required: true
+      global-json:
+        type: string
+        required: false
+        default: './global.json'
+      docker-file:
+        type: string
+        required: false
+        default: './docker/Dockerfile'
+      configuration:
+        type: string
+        required: false
+        default: 'Release'
+      runtime:
+        type: string
+        required: false
+        default: 'linux-x64'
+      test-runsettings:
+        type: string
+        required: false
+        default: './tests/.runsettings'
+
+env:
+  DOTNET_APP_SOLUTION: ${{ inputs.app-solution}}
+  DOTNET_APP_PUBLISH_PROJECT: ${{ inputs.app-publish-project}}
+  DOTNET_GLOBAL_JSON: ${{ inputs.global-json }}
+  DOCKER_FILE: ${{ inputs.docker-file }}
+  DOTNET_CONFIGURATION: ${{ inputs.configuration }}
+  DOTNET_RUNTIME: ${{ inputs.runtime }}
+  DOTNET_TEST_RUNSETTINGS: ${{ inputs.test-runsettings }}
+  DOTNET_APP_PUBLISH_FOLDER: './publish'
+  DOTNET_TEST_COVERAGE_FILE: 'coverage.cobertura.xml'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+      # Git - Checkout
+      - name: Git - Checkout
+        uses: actions/checkout@v3
+
+      # .NET - Load cache dependencies
+      - name: .NET - Load cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/.dotnet
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '.github/workflows/**') }}
+
+      # .NET - Setup SDK with global.json
+      - name: .NET - Setup SDK with global.json
+        uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: ${{ env.DOTNET_GLOBAL_JSON }}
+
+      # .Net - tool restore
+      - name: .Net - Tool restore
+        run: |
+          dotnet tool restore
+
+      # .Net - Build
+      - name: .Net - Build
+        run: |
+          dotnet build ${{ env.DOTNET_APP_PUBLISH_PROJECT }} \
+            -c ${{ env.DOTNET_CONFIGURATION }} \
+            -r ${{ env.DOTNET_RUNTIME }}
+
+      # .Net - Run test and collect data
+      - name: .Net - Run test and collect data
+        run: |
+          dotnet coverage collect \
+            --output ${{ env.DOTNET_TEST_COVERAGE_FILE }} \
+            --output-format cobertura \
+            --settings ${{ env.DOTNET_TEST_RUNSETTINGS }} \
+            "dotnet test ${{ env.DOTNET_APP_SOLUTION }} \
+              -c ${{ env.DOTNET_CONFIGURATION }} \
+              -r ${{ env.DOTNET_RUNTIME }}"
+
+      # Coverage Report - Generate
+      - name: Test Coverage - Generate report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+        with:
+          reports: ${{ env.DOTNET_TEST_COVERAGE_FILE }}
+          toolpath: ~/.dotnet/tools
+          targetdir: .
+          reporttypes: MarkdownSummaryGithub
+
+      # Coverage Report - Publish
+      - name: Test Coverage - Publish report
+        run: |
+          cat SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+
+      # .Net - Publish
+      - name: .Net - Publish
+        shell: pwsh
+        run: |
+          dotnet publish ${{ env.DOTNET_APP_PUBLISH_PROJECT }} `
+            --no-build `
+            -c ${{ env.DOTNET_CONFIGURATION }} `
+            -r ${{ env.DOTNET_RUNTIME }} `
+            -o ${{ env.DOTNET_APP_PUBLISH_FOLDER }}
+
+      # Docker - Build image
+      - name: Docker - Build image
+        shell: pwsh
+        run: |
+          docker build `
+            -f ${{ env.DOCKER_FILE }} `
+            -t ${{ github.sha }} `
+            ${{ env.DOTNET_APP_PUBLISH_FOLDER }}
+
+      # Docker - Save image
+      - name: Docker - Save image
+        if: inputs.upload-artifact
+        shell: pwsh
+        run: |
+          docker save `
+            -o ${{ env.DOTNET_APP_PUBLISH_FOLDER }}/docker-image.tar `
+            ${{ github.sha }}
+
+      # Artifact - Upload Docker image
+      - name: Artifact - Upload Docker image
+        if: inputs.upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: ${{ env.DOTNET_APP_PUBLISH_FOLDER }}/docker-image.tar
+
+      # Dump GitHub Context
+      - name: Dump GitHub Context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          echo '## Build Context' >> $GITHUB_STEP_SUMMARY
+          echo '<details><summary>Build Context</summary>' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$GITHUB_CONTEXT" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '</details>' >> $GITHUB_STEP_SUMMARY
