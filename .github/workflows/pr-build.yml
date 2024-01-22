@@ -1,0 +1,31 @@
+name: PR - Build Pipeline
+run-name: "PR - ${{ github.event.repository.name }} Build #${{ github.run_number }}"
+
+on:
+  pull_request:
+    branches: main
+  push:
+    branches: [main, features/ci-build]
+
+
+concurrency:
+  group: build-pr-${{ github.event.pull_request.number }}
+  # If this is enabled it will cancel current running and start latest
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/template-build.yml
+    with:
+      upload-artifact: true
+      app-solution: './EverydayReceiptsReceipts.Downloader.sln'
+      app-publish-project: './src/Presentation/WebApi/EverydayReceiptsReceipts.Downloader.Presentation.WebApi.csproj'
+  cd:
+    name: CD
+    needs: ci
+    uses: ./.github/workflows/template-deploy.yml
+    with:
+      environment: testing
+      resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
+      bicepparam-file: './infra/staging.bicepparam'
