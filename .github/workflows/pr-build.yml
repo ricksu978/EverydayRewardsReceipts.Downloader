@@ -19,13 +19,13 @@ jobs:
     uses: ./.github/workflows/template-build.yml
     with:
       upload-artifact: true
-      app-solution: './EverydayReceiptsReceipts.Downloader.sln'
-      app-publish-project: './src/Presentation/WebApi/EverydayReceiptsReceipts.Downloader.Presentation.WebApi.csproj'
+      app-solution: ./EverydayReceiptsReceipts.Downloader.sln
+      app-publish-project: ./src/Presentation/WebApi/EverydayReceiptsReceipts.Downloader.Presentation.WebApi.csproj
   cd:
     name: CD
     needs: ci
     uses: ./.github/workflows/template-deploy.yml
     with:
-      environment: testing
+      environment: staging
       resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
-      bicepparam-file: './infra/staging.bicepparam'
+      bicepparam-file: ./infra/staging.bicepparam

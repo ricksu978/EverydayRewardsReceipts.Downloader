@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{91FFBA97-31E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{74ED9D44-BD36-401B-99ED-5D49E5E40A00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\Presentation\WebApi\WebApi.csproj", "{30566944-DCE9-45BD-9E63-3AB3E560C762}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\Presentation\WebApi\EverydayReceiptsReceipts.Downloader.Presentation.WebApi.csproj", "{30566944-DCE9-45BD-9E63-3AB3E560C762}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{97100E4C-1C10-4BE0-975A-1A35F3DCA05D}"
 EndProject
