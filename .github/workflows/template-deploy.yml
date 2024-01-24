@@ -35,7 +35,7 @@ jobs:
       - name: Azure - Login
         uses: azure/login@v1
         with:
-          client-id: ${{ vars.AZURE_APP_REGISTRATION_CLIENT_ID }}
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
@@ -52,6 +52,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bicep
+        shell: pwsh
+        run: |
+          az bicep upgrade
+
+          $DEPLOYMENT_OUTPUT = az deployment group create `
+              -n "deploymentName" `
+              -f ".\infra\main.bicep" `
+              -g "EverydayRewards.staging" `
+              -p ".\infra\staging.bicepparam" `
+              --query properties.outputs | ConvertFrom-Json
 
       # # Docker - Tag and Push Image
       # - name: Docker - Tag and Push Image
