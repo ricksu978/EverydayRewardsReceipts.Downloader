@@ -7,11 +7,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{91FFBA97-31E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{74ED9D44-BD36-401B-99ED-5D49E5E40A00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\Presentation\WebApi\EverydayRewardsReceipts.Downloader.Presentation.WebApi.csproj", "{30566944-DCE9-45BD-9E63-3AB3E560C762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EverydayRewardsReceipts.Downloader.Presentation.WebApi", "src\Presentation\WebApi\EverydayRewardsReceipts.Downloader.Presentation.WebApi.csproj", "{30566944-DCE9-45BD-9E63-3AB3E560C762}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{97100E4C-1C10-4BE0-975A-1A35F3DCA05D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{97100E4C-1C10-4BE0-975A-1A35F3DCA05D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{8E00A923-CEA2-4303-9EC4-8DCE145337DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{8E00A923-CEA2-4303-9EC4-8DCE145337DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1342247C-5763-4338-8A6C-70EC74B12A5F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{9DF2CEEA-0696-4DD8-8A0F-20727F36C1F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{A1664100-A877-4437-AC53-C1E0516C55DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EverydayRewardsReceipts.Downloader.Domain", "src\Core\Domain\EverydayRewardsReceipts.Downloader.Domain.csproj", "{B3667C77-5A13-4B05-A2D2-5CE20D4745BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EverydayRewardsReceipts.Downloader.Application", "src\Core\Application\EverydayRewardsReceipts.Downloader.Application.csproj", "{CCA50B15-2724-4FFD-9EC3-47DBCB718917}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +41,27 @@ Global
 		{8E00A923-CEA2-4303-9EC4-8DCE145337DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E00A923-CEA2-4303-9EC4-8DCE145337DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E00A923-CEA2-4303-9EC4-8DCE145337DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3667C77-5A13-4B05-A2D2-5CE20D4745BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3667C77-5A13-4B05-A2D2-5CE20D4745BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3667C77-5A13-4B05-A2D2-5CE20D4745BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3667C77-5A13-4B05-A2D2-5CE20D4745BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA50B15-2724-4FFD-9EC3-47DBCB718917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA50B15-2724-4FFD-9EC3-47DBCB718917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA50B15-2724-4FFD-9EC3-47DBCB718917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA50B15-2724-4FFD-9EC3-47DBCB718917}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{30566944-DCE9-45BD-9E63-3AB3E560C762} = {91FFBA97-31E5-41BA-A1CF-0F2BC2B1C18F}
+		{30566944-DCE9-45BD-9E63-3AB3E560C762} = {9DF2CEEA-0696-4DD8-8A0F-20727F36C1F9}
 		{97100E4C-1C10-4BE0-975A-1A35F3DCA05D} = {74ED9D44-BD36-401B-99ED-5D49E5E40A00}
 		{8E00A923-CEA2-4303-9EC4-8DCE145337DE} = {74ED9D44-BD36-401B-99ED-5D49E5E40A00}
+		{1342247C-5763-4338-8A6C-70EC74B12A5F} = {91FFBA97-31E5-41BA-A1CF-0F2BC2B1C18F}
+		{9DF2CEEA-0696-4DD8-8A0F-20727F36C1F9} = {91FFBA97-31E5-41BA-A1CF-0F2BC2B1C18F}
+		{A1664100-A877-4437-AC53-C1E0516C55DF} = {91FFBA97-31E5-41BA-A1CF-0F2BC2B1C18F}
+		{B3667C77-5A13-4B05-A2D2-5CE20D4745BE} = {1342247C-5763-4338-8A6C-70EC74B12A5F}
+		{CCA50B15-2724-4FFD-9EC3-47DBCB718917} = {1342247C-5763-4338-8A6C-70EC74B12A5F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B74EFFFF-43AC-4DB0-8BE8-64FDBCC064F2}
