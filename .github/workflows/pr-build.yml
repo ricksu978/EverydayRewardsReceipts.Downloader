@@ -1,12 +1,9 @@
 name: PR - Build Pipeline
-run-name: "PR - ${{ github.event.repository.name }} Build #${{ github.run_number }}"
+run-name: "PR - Build #${{ github.run_number }}"
 
 on:
   pull_request:
     branches: main
-  push:
-    branches: [main, features/ci-build]
-
 
 concurrency:
   group: build-pr-${{ github.event.pull_request.number }}
@@ -18,14 +15,7 @@ jobs:
     name: CI
     uses: ./.github/workflows/template-build.yml
     with:
-      upload-artifact: true
+      upload-artifact: false
       app-solution: ./EverydayRewardsReceipts.Downloader.sln
       app-publish-project: ./src/Presentation/WebApi/EverydayRewardsReceipts.Downloader.Presentation.WebApi.csproj
-  # cd:
-  #   name: CD
-  #   needs: ci
-  #   uses: ./.github/workflows/template-deploy.yml
-  #   with:
-  #     environment: staging
-  #     resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
-  #     bicepparam-file: ./infra/staging.bicepparam
+
