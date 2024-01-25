@@ -52,11 +52,11 @@ jobs:
 
       # Git - Checkout
       - name: Git - Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # .NET - Load cache dependencies
       - name: .NET - Load cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.nuget/packages
@@ -65,7 +65,7 @@ jobs:
 
       # .NET - Setup SDK with global.json
       - name: .NET - Setup SDK with global.json
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           global-json-file: ${{ env.DOTNET_GLOBAL_JSON }}
 
@@ -94,7 +94,7 @@ jobs:
 
       # Coverage Report - Generate
       - name: Test Coverage - Generate report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
         with:
           reports: ${{ env.DOTNET_TEST_COVERAGE_FILE }}
           toolpath: ~/.dotnet/tools
