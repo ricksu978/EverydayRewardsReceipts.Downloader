@@ -13,6 +13,7 @@ on:
         required: true
         type: string
 
+
 permissions:
   id-token: write
   contents: read
@@ -59,10 +60,13 @@ jobs:
           az bicep upgrade
 
           $DEPLOYMENT_OUTPUT = az deployment group create `
-              -n "deploymentName" `
+              -n "GitHubActions" `
               -f ".\infra\main.bicep" `
-              -g "EverydayRewards.staging" `
-              -p ".\infra\staging.bicepparam" `
+              -g "${{ inputs.resource-group }}" `
+              -p "${{ inputs.bicepparam-file }}" `
+              -p environment=${{ inputs.environment }}
+              -p planName=${{ vars.AZURE_PLAN_NAME }} `
+              -p planResourceGroup=${{ vars.AZURE_PALN_RESOURCE_GROUP }} `
               --query properties.outputs | ConvertFrom-Json
 
       # # Docker - Tag and Push Image
