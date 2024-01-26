@@ -64,53 +64,20 @@ jobs:
               -f ".\infra\main.bicep" `
               -g "${{ inputs.resource-group }}" `
               -p "${{ inputs.bicepparam-file }}" `
-              -p environment=${{ inputs.environment }}
+              -p environment=${{ inputs.environment }} `
               -p planName=${{ vars.AZURE_PLAN_NAME }} `
               -p planResourceGroup=${{ vars.AZURE_PALN_RESOURCE_GROUP }} `
               --query properties.outputs | ConvertFrom-Json
 
-      # # Docker - Tag and Push Image
-      # - name: Docker - Tag and Push Image
-      #   shell: pwsh
-      #   run: |
-      #     ./infra/powershell/TagAndPush-DockerImage.ps1 `
-      #       -tarFile ${{ github.workspace}}/docker-image.tar `
-      #       -repository ${{ steps.deployment.outputs.ACR_LOGIN_SERVER }}/${{ vars.ACR_REPOSITORY }} `
-      #       -sha ${{ github.sha }} `
-      #       -latest latest-${{ inputs.environment }} `
-      #       -version ${{ github.ref_name }}
+      # az webapp deployment list-publishing-profiles --name everydayrewards-receipts-downloader-staging --resource-group EverydayRewards.Staging --xml
 
-      # # EF - Generate Migration SQL Script
-      # - name: EF - Generate Migration SQL Script
-      #   run: |
-      #     dotnet tool restore
-      #     dotnet ef migrations script --idempotent \
-      #       --output ${{ env.SQL_MIGRATION_SCRIPT }} \
-      #       --project ./src/SSW.EagleEye.Infrastructure \
-      #       --startup-project ./src/SSW.EagleEye.Console
-
-      # # EF - Apply Migration SQL Script
-      # - name: EF - Apply Migration SQL Script
-      #   uses: 'azure/sql-action@v2.2.1'
-      #   with:
-      #     connection-string: ${{ steps.deployment.outputs.DATABASE_CONNECTION }}
-      #     path: ${{ env.SQL_MIGRATION_SCRIPT }}
-
-      # # Database - master - Create Login
-      # - name: Database - master - Create Login
-      #   uses: 'azure/sql-action@v2.2.1'
-      #   with:
-      #     connection-string: ${{ steps.deployment.outputs.DATABASE_CONNECTION_MASTER }}
-      #     path: ${{ github.workspace }}/infra/sql/createDatabaseLogin.sql
-      #     arguments: "-v databaseUsernameReadonly=${{ steps.deployment.outputs.DATABASE_USERNAME_READONLY }} -v databasePasswordReadonly=${{ steps.deployment.outputs.DATABASE_PASSWORD_READONLY }} -v databaseUsernameReadWrite=${{ steps.deployment.outputs.DATABASE_USERNAME_READWRITE }} -v databasePasswordReadWrite=${{ steps.deployment.outputs.DATABASE_PASSWORD_READWRITE }}"
-
-      # # Database - ${{ steps.deployment.outputs.DATABASE_NAME }} Create User
-      # - name: Database - ${{ steps.deployment.outputs.DATABASE_NAME }} - Create User
-      #   uses: 'azure/sql-action@v2.2.1'
-      #   with:
-      #     connection-string: ${{ steps.deployment.outputs.DATABASE_CONNECTION }}
-      #     path: ${{ github.workspace }}/infra/sql/createDatabaseUser.sql
-      #     arguments: "-v databaseUsernameReadonly=${{ steps.deployment.outputs.DATABASE_USERNAME_READONLY }} -v databaseUsernameReadWrite=${{ steps.deployment.outputs.DATABASE_USERNAME_READWRITE }}"
+      - name: Azure - App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_APP_NAME }}
+          slot-name: ${{ inputs.environment }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ github.workspace }}/app.zip
 
       # Dump GitHub Context
       - name: Dump GitHub Context
