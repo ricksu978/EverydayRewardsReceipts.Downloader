@@ -17,3 +17,5 @@ resource appSvc 'Microsoft.Web/sites@2023-01-01' = {
     }
   }
 }
+
+output name string = appSvc.name

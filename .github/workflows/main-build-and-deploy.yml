@@ -3,7 +3,7 @@ run-name: "Staging - Build and Deploy #${{ github.run_number }}"
 
 on:
   push:
-    branches: main
+    branches: [main, features/ci-build]
 
 jobs:
   ci:
