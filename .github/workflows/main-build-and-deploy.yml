@@ -19,5 +19,5 @@ jobs:
     uses: ./.github/workflows/template-deploy.yml
     with:
       environment: staging
-      resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
       bicepparam-file: ./infra/staging.bicepparam
+

@@ -6,9 +6,6 @@ on:
       environment:
         required: true
         type: string
-      resource-group:
-        required: true
-        type: string
       bicepparam-file:
         required: true
         type: string
@@ -30,11 +27,11 @@ jobs:
 
       # Git- Checkout
       - name: Git - Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Azure - Login
       - name: Azure - Login
-        uses: azure/login@v1.6.1
+        uses: azure/login@v1
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
@@ -62,7 +59,7 @@ jobs:
           $DEPLOYMENT_OUTPUT = az deployment group create `
               -n "GitHubActions" `
               -f ".\infra\main.bicep" `
-              -g "${{ inputs.resource-group }}" `
+              -g "${{ vars.AZURE_RESOURCE_GROUP }}" `
               -p "${{ inputs.bicepparam-file }}" `
               -p environment=${{ inputs.environment }} `
               -p planName=${{ vars.AZURE_PLAN_NAME }} `
@@ -71,13 +68,13 @@ jobs:
 
       # az webapp deployment list-publishing-profiles --name everydayrewards-receipts-downloader-staging --resource-group EverydayRewards.Staging --xml
 
-      - name: Azure - App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ vars.AZURE_APP_NAME }}
-          slot-name: ${{ inputs.environment }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ github.workspace }}/app.zip
+      # - name: Azure - App Service
+      #   uses: azure/webapps-deploy@v3
+      #   with:
+      #     app-name: ${{ vars.AZURE_APP_NAME }}
+      #     slot-name: ${{ inputs.environment }}
+      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      #     package: ${{ github.workspace }}/app.zip
 
       # Dump GitHub Context
       - name: Dump GitHub Context
