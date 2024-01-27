@@ -26,7 +26,7 @@ $appServiceName = $DEPLOYMENT_OUTPUT.appService.value.name
 "AZURE_APP_SERVICE_NAME=$appServiceName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
 
 # Output Azure Container Registry
-$acrName = $DEPLOYMENT_OUTPUT.acr.value.name
+$acrName = $DEPLOYMENT_OUTPUT.acr.value.loginServer
 "AZURE_CONTAINER_REGISTRY_NAME=$acrName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
 
 # Output Azure Publish Profile
