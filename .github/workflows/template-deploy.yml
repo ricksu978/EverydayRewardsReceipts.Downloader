@@ -67,7 +67,7 @@ jobs:
         run: |
           ./infra/powershell/TagAndPush-DockerImage.ps1 `
             -tarFile ${{ github.workspace}}/docker-image.tar `
-            -repository ${{ steps.deployment.outputs.ACR_LOGIN_SERVER }}/${{ vars.ACR_REPOSITORY }} `
+            -repository ${{ steps.deployment.outputs.AZURE_CONTAINER_REGISTRY_NAME }}/${{ vars.ACR_REPOSITORY }} `
             -sha ${{ github.sha }} `
             -latest latest-${{ inputs.environment }} `
             -version ${{ github.ref_name }}

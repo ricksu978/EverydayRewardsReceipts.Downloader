@@ -1,4 +1,4 @@
-name: Staging - Build and Deploy Pipeline
+name: Staging Pipeline
 run-name: "Staging - Build and Deploy #${{ github.run_number }}"
 
 on:

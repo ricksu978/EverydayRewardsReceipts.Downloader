@@ -1,4 +1,4 @@
-name: PR - Build Pipeline
+name: PR Pipeline
 run-name: "PR - Build #${{ github.run_number }}"
 
 on:
