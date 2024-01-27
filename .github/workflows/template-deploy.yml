@@ -6,9 +6,6 @@ on:
       environment:
         required: true
         type: string
-      resource-group:
-        required: true
-        type: string
       bicepparam-file:
         required: true
         type: string
@@ -30,7 +27,7 @@ jobs:
 
       # Git- Checkout
       - name: Git - Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Azure - Login
       - name: Azure - Login
@@ -40,44 +37,48 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
+      # Azure - Deploy Resources
+      - name: Azure - Deploy Resources
+        id: deployment
+        shell: pwsh
+        run: |
+          .\infra\powershell\Deploy-AzureResources.ps1 `
+            -deploymentName "gha-${{ github.run_number}}.${{ github.sha }}" `
+            -resourceGroup "${{ vars.AZURE_RESOURCE_GROUP }}" `
+            -bicepParamFile ${{ inputs.bicepparam-file }} `
+            -environment "${{ inputs.environment}}" `
+            -planName "${{ vars.AZURE_PLAN_NAME }}" `
+            -globalResourceGroupName "${{ vars.AZURE_GLOBAL_RESOURCE_GROUP }}"
+
+      # Azure - Login Container Registry
+      - name: Azure - Login Container Registry
+        run: |
+          az acr login --name ${{ steps.deployment.outputs.AZURE_CONTAINER_REGISTRY_NAME }}
+
       # Docker - Download Artifact
       - name: Docker - Download Artifact
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
 
-      # Docker - Login to GitHub Container Registry
-      - name: Docker - Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Bicep
+      # Docker - Tag and Push Image
+      - name: Docker - Tag and Push Image
         shell: pwsh
         run: |
-          az bicep upgrade
+          ./infra/powershell/TagAndPush-DockerImage.ps1 `
+            -tarFile ${{ github.workspace}}/docker-image.tar `
+            -repository ${{ steps.deployment.outputs.AZURE_CONTAINER_REGISTRY_NAME }}/${{ vars.ACR_REPOSITORY }} `
+            -sha ${{ github.sha }} `
+            -latest latest-${{ inputs.environment }} `
+            -version ${{ github.ref_name }}
 
-          $DEPLOYMENT_OUTPUT = az deployment group create `
-              -n "GitHubActions" `
-              -f ".\infra\main.bicep" `
-              -g "${{ inputs.resource-group }}" `
-              -p "${{ inputs.bicepparam-file }}" `
-              -p environment=${{ inputs.environment }} `
-              -p planName=${{ vars.AZURE_PLAN_NAME }} `
-              -p planResourceGroup=${{ vars.AZURE_PALN_RESOURCE_GROUP }} `
-              --query properties.outputs | ConvertFrom-Json
-
-      # az webapp deployment list-publishing-profiles --name everydayrewards-receipts-downloader-staging --resource-group EverydayRewards.Staging --xml
-
-      - name: Azure - App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ vars.AZURE_APP_NAME }}
-          slot-name: ${{ inputs.environment }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ github.workspace }}/app.zip
+      # # Azure - Deploy App Service
+      # - name: Azure - Deploy App Service
+      #   uses: azure/webapps-deploy@v3
+      #   with:
+      #     app-name: ${{ steps.deployment.outputs.AZURE_APP_SERVICE_NAME }}
+      #     publish-profile: ${{ steps.deployment.outputs.AZURE_PUBLISH_PROFILE }}
+      #     package: ${{ github.workspace }}/app.zip
 
       # Dump GitHub Context
       - name: Dump GitHub Context

@@ -1,9 +1,9 @@
-name: Staging - Build and Deploy Pipeline
+name: Staging Pipeline
 run-name: "Staging - Build and Deploy #${{ github.run_number }}"
 
 on:
   push:
-    branches: main
+    branches: [main, features/ci-build]
 
 jobs:
   ci:
@@ -19,5 +19,5 @@ jobs:
     uses: ./.github/workflows/template-deploy.yml
     with:
       environment: staging
-      resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
       bicepparam-file: ./infra/staging.bicepparam
+
