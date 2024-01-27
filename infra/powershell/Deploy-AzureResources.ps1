@@ -21,21 +21,20 @@ $DEPLOYMENT_OUTPUT = az deployment group create `
     -p globalResourceGroupName="$globalResourceGroupName" `
     --query properties.outputs | ConvertFrom-Json
 
-# Output Azure App Service Name
 $appServiceName = $DEPLOYMENT_OUTPUT.appService.value.name
-"AZURE_APP_SERVICE_NAME=$appServiceName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
-
-# Output Azure Container Registry
 $acrName = $DEPLOYMENT_OUTPUT.acr.value.loginServer
-"AZURE_CONTAINER_REGISTRY_NAME=$acrName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
 
-# Output Azure Publish Profile
-$AZURE_PUBLISH_PROFILE = az webapp deployment list-publishing-profiles `
+$publicProfile = az webapp deployment list-publishing-profiles `
     --name $appServiceName `
     --resource-group $resourceGroup `
     --xml
-Write-Output "::add-mask::$AZURE_PUBLISH_PROFILE"
-"AZURE_PUBLISH_PROFILE=$AZURE_PUBLISH_PROFILE" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
+Write-Output "::add-mask::$publicProfile"
+
+if ($null -ne $env:GITHUB_OUTPUT) {
+    "AZURE_APP_SERVICE_NAME=$appServiceName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
+    "AZURE_CONTAINER_REGISTRY_NAME=$acrName" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
+    "AZURE_PUBLISH_PROFILE=$publicProfile" | Out-File -Append -FilePath $env:GITHUB_OUTPUT
+}
 
 
 

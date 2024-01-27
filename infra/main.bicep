@@ -39,6 +39,7 @@ module appService './appService.bicep' = {
     appServiceName: 'appsvc-errd-${environment}'
     planId: plan.id
     planLocation: plan.location
+    principalId: id.id
   }
 }
 
