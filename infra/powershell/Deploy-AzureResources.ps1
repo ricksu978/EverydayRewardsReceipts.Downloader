@@ -43,7 +43,8 @@ az deployment group create `
     -p name="webhook$($appServiceName.Replace('-', ''))" `
     -p serviceUrl="$CI_CD_URL" `
     -p acrName="$acrName" `
-    -p dockerImage="$dockerImage"
+    -p dockerImage="$dockerImage" `
+    --query properties.outputs | ConvertFrom-Json
 
 # Publish Profile
 $publicProfile = az webapp deployment list-publishing-profiles `
