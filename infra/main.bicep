@@ -18,6 +18,8 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   scope: globalResourceGroup
 }
 
+
+
 // Managed Identity
 resource id 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'id-errd-${environment}'

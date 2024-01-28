@@ -24,10 +24,15 @@ resource appSvc 'Microsoft.Web/sites@2023-01-01' = {
       linuxFxVersion: 'DOCKER|${acrServer}/${dockerImage}'
       alwaysOn: true
       http20Enabled: true
+      acrUseManagedIdentityCreds: true
       appSettings: [
         {
           name: 'DOCKER_REGISTRY_SERVER_URL'
           value: acrServer
+        }
+        {
+          name: 'DOCKER_ENABLE_CI'
+          value: 'true'
         }
         {
           name: 'ASPNETCORE_ENVIRONMENT'
