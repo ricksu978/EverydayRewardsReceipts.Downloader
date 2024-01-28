@@ -2,6 +2,10 @@ param appServiceName string
 param planId string
 param planLocation string
 param principalId string
+param dockerImage string
+param acrServer string
+param environment string
+
 
 resource appSvc 'Microsoft.Web/sites@2023-01-01' = {
   name: appServiceName
@@ -17,9 +21,19 @@ resource appSvc 'Microsoft.Web/sites@2023-01-01' = {
     httpsOnly: true
 
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|8.0'
+      linuxFxVersion: 'DOCKER|${acrServer}/${dockerImage}'
       alwaysOn: true
       http20Enabled: true
+      appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: acrServer
+        }
+        {
+          name: 'ASPNETCORE_ENVIRONMENT'
+          value: environment
+        }
+      ]
 
     }
   }

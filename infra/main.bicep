@@ -1,6 +1,7 @@
 param planName string
 param globalResourceGroupName string
 param environment string
+param dockerImage string
 param location string = resourceGroup().location
 
 var globalResourceGroup = resourceGroup(globalResourceGroupName)
@@ -40,6 +41,9 @@ module appService './appService.bicep' = {
     planId: plan.id
     planLocation: plan.location
     principalId: id.id
+    dockerImage: dockerImage
+    acrServer: acr.properties.loginServer
+    environment: environment
   }
 }
 

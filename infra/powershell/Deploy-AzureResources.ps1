@@ -4,7 +4,8 @@ param(
     [string]$bicepParamFile,
     [string]$environment,
     [string]$planName,
-    [string]$globalResourceGroupName
+    [string]$globalResourceGroupName,
+    [string]$dockerImage
 )
 
 # Upgrade Bicep CLI (required)
@@ -19,6 +20,7 @@ $DEPLOYMENT_OUTPUT = az deployment group create `
     -p environment="$environment" `
     -p planName="$planName" `
     -p globalResourceGroupName="$globalResourceGroupName" `
+    -p dockerImage="$dockerImage" `
     --query properties.outputs | ConvertFrom-Json
 
 $appServiceName = $DEPLOYMENT_OUTPUT.appService.value.name
