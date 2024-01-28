@@ -1,6 +1,8 @@
 param planName string
 param globalResourceGroupName string
 param environment string
+param acrName string
+param dockerImage string
 param location string = resourceGroup().location
 
 var globalResourceGroup = resourceGroup(globalResourceGroupName)
@@ -13,9 +15,11 @@ resource plan 'Microsoft.Web/serverfarms@2023-01-01' existing = {
 
 // Azure Container Registry
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
-  name: 'ricksu'
+  name: acrName
   scope: globalResourceGroup
 }
+
+
 
 // Managed Identity
 resource id 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
@@ -40,6 +44,9 @@ module appService './appService.bicep' = {
     planId: plan.id
     planLocation: plan.location
     principalId: id.id
+    dockerImage: dockerImage
+    acrServer: acr.properties.loginServer
+    environment: environment
   }
 }
 

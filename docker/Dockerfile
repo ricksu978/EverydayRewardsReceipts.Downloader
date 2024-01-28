@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 WORKDIR /app
 COPY . .
-ENTRYPOINT ["dotnet", "EverydayReceiptsReceipts.Downloader.Presentation.WebApi.dll"]
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+ENTRYPOINT ["dotnet", "EverydayRewardsReceipts.Downloader.Presentation.WebApi.dll"]

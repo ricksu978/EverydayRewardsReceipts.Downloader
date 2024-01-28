@@ -7,6 +7,7 @@ param roleName string
 @allowed(['Device', 'ForeignGroup', 'Group', 'ServicePrincipal', 'User'])
 param principalType string = 'ServicePrincipal'
 
+
 var roleIdMapping = {
   'ACR Pull': '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 }
