@@ -48,7 +48,7 @@ jobs:
             -bicepParamFile ${{ inputs.bicepparam-file }} `
             -environment "${{ inputs.environment}}" `
             -planName "${{ vars.AZURE_PLAN_NAME }}" `
-            -dockerImage "${{ vars.ACR_REPOSITORY }}:latest-${{ inputs.environment }}"
+            -dockerImage "${{ vars.ACR_REPOSITORY }}:latest-${{ inputs.environment }}" `
             -globalResourceGroupName "${{ vars.AZURE_GLOBAL_RESOURCE_GROUP }}"
 
       # Azure - Login Container Registry
