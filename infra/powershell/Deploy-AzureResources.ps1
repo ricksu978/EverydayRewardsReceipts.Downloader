@@ -40,7 +40,7 @@ az deployment group create `
     -n "$deploymentName-webhook" `
     -f ".\infra\acrWebhook.bicep" `
     -g "$globalResourceGroupName" `
-    -p name="webhook-$appServiceName" `
+    -p name="webhook$($appServiceName.Replace('-', ''))" `
     -p serviceUrl="$CI_CD_URL" `
     -p acrName="$acrName" `
     -p dockerImage="$dockerImage"
