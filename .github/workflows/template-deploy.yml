@@ -48,13 +48,14 @@ jobs:
             -bicepParamFile ${{ inputs.bicepparam-file }} `
             -environment "${{ inputs.environment}}" `
             -planName "${{ vars.AZURE_PLAN_NAME }}" `
+            -acrName "${{ vars.AZURE_CONTAINER_REGISTRY_NAME }}" `
             -dockerImage "${{ vars.ACR_REPOSITORY }}:latest-${{ inputs.environment }}" `
             -globalResourceGroupName "${{ vars.AZURE_GLOBAL_RESOURCE_GROUP }}"
 
       # Azure - Login Container Registry
       - name: Azure - Login Container Registry
         run: |
-          az acr login --name ${{ steps.deployment.outputs.AZURE_CONTAINER_REGISTRY_NAME }}
+          az acr login --name ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }}
 
       # Docker - Download Artifact
       - name: Docker - Download Artifact
