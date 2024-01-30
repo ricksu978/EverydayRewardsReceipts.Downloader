@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EverydayRewardsReceipts.Dow
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{97100E4C-1C10-4BE0-975A-1A35F3DCA05D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{8E00A923-CEA2-4303-9EC4-8DCE145337DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EverydayRewardsReceipts.Downloader.UnitTests", "tests\UnitTests\EverydayRewardsReceipts.Downloader.UnitTests.csproj", "{8E00A923-CEA2-4303-9EC4-8DCE145337DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1342247C-5763-4338-8A6C-70EC74B12A5F}"
 EndProject

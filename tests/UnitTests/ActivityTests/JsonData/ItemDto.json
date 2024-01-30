@@ -1,0 +1,12 @@
+{
+  "id": "1659014271",
+  "displayDate": "Wed 24 Jan",
+  "transaction": {
+    "origin": "Carlingford",
+    "amountAsDollars": "$36.69"
+  },
+  "receipt": {
+    "receiptId": "U2FsdGVkX1+L7ROlt6alHT/fM1ZdCwL+EV21CawaMvibYE0ukLxAAxeO2AmTWQtjzET89y0NheRln45eeVK1UuGovfcq2tkrbWXztpbGvuQ="
+  },
+  "transactionType": "purchase"
+}

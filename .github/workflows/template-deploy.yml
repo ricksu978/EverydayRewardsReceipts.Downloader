@@ -31,7 +31,7 @@ jobs:
 
       # Azure - Login
       - name: Azure - Login
-        uses: azure/login@v1
+        uses: azure/login@v1.6.1
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
