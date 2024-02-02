@@ -15,9 +15,6 @@ public class ReceiptDownloadUseCase
 
     public async Task<ReceiptDetailDownloadResponse> ExecuteAsync(ReceiptDownloadRequest request, CancellationToken token)
     {
-        
-
-
-        return new ReceiptDetailDownloadResponse(stream);
+        throw new NotImplementedException();
     }
 }
