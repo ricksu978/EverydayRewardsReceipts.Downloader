@@ -16,13 +16,16 @@ public class EverydayRewardsAccount
     {
         var searchRequest = new ActivitySearchRequest();
         var doContinue = true;
-        ActivitySearchResponse serachResponse;
+        ActivitySearchResponse searchResponse;
 
         do
         {
-            serachResponse = await _woolworthService.SearchActivitiesAsync(searchRequest);
+            searchResponse = await _woolworthService.SearchActivitiesAsync(searchRequest);
 
-            foreach (var group in serachResponse.Data.RtlRewardsActivityFeed.List.Groups)
+            if (searchResponse?.Data == null)
+                break;
+
+            foreach (var group in searchResponse.Data.RtlRewardsActivityFeed.List.Groups)
             {
                 foreach (var item in group.Items)
                 {
@@ -51,7 +54,7 @@ public class EverydayRewardsAccount
                 }
             }
 
-            searchRequest = new ActivitySearchRequest(serachResponse.NextPageToken);
+            searchRequest = new ActivitySearchRequest(searchResponse.NextPageToken);
         }
         while (doContinue);
     }
