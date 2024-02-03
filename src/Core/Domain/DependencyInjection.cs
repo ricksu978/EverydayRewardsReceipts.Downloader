@@ -1,4 +1,5 @@
-﻿using EverydayRewardsReceipts.Downloader.Domain.Services;
+﻿using EverydayRewardsReceipts.Downloader.Domain.AggregateRoots;
+using EverydayRewardsReceipts.Downloader.Domain.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddDomain(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<WoolworthService>();
+        services.AddScoped<EverydayRewardsAccount>();
         services.Configure<WoolworthServiceOptions>(configuration.GetSection("WoolworthService"));
         services.AddHttpClient<WoolworthService>((provider, httpClient) =>
         {

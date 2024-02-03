@@ -1,5 +1,4 @@
-﻿using EverydayRewardsReceipts.Downloader.Domain.Entities;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace EverydayRewardsReceipts.Downloader.Domain.Services;
 
@@ -32,5 +31,16 @@ public class WoolworthService
 
         return await response.Content.ReadFromJsonAsync<ReceiptDetailGetResponse>(token)
             ?? throw new Exception("Failed to deserialize response");
+    }
+
+    public async Task<ReceiptDetailDownloadResponse> DownloadReceiptDetail(ReceiptDetailDownloadRequest request, CancellationToken token = default)
+    {
+        var data = JsonContent.Create(request);
+
+        var response = await _httpClient.PostAsync("/wx/v1/bff/ereceipts/details/download", data, token);
+
+        var stream = await response.Content.ReadAsStreamAsync(token);
+
+        return new ReceiptDetailDownloadResponse(stream);
     }
 }
